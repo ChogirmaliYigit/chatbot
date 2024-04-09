@@ -12,12 +12,13 @@ class Database:
         self.pool: Union[Pool, None] = None
 
     async def create(self):
-        self.pool = await asyncpg.create_pool(
-            user=config.DB_USER,
-            password=config.DB_PASS,
-            host=config.DB_HOST,
-            database=config.DB_NAME,
-        )
+        pass
+        # self.pool = await asyncpg.create_pool(
+        #     user=config.DB_USER,
+        #     password=config.DB_PASS,
+        #     host=config.DB_HOST,
+        #     database=config.DB_NAME,
+        # )
 
     async def execute(
         self,

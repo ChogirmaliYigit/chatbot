@@ -14,10 +14,11 @@ def setup_handlers(dispatcher: Dispatcher) -> None:
 
 def setup_middlewares(dispatcher: Dispatcher, bot: Bot) -> None:
     """MIDDLEWARE"""
-    from middlewares.throttling import ThrottlingMiddleware
+    from middlewares import ThrottlingMiddleware, MemberMiddleware
 
     # Spamdan himoya qilish uchun klassik ichki o'rta dastur. So'rovlar orasidagi asosiy vaqtlar 0,5 soniya
     dispatcher.message.middleware(ThrottlingMiddleware(slow_mode_delay=0.5))
+    dispatcher.message.middleware(MemberMiddleware())
 
 
 def setup_filters(dispatcher: Dispatcher) -> None:
@@ -37,19 +38,9 @@ async def setup_aiogram(dispatcher: Dispatcher, bot: Bot) -> None:
     logger.info("Configured aiogram")
 
 
-async def database_connected():
-    # Ma'lumotlar bazasini yaratamiz:
-    await db.create()
-    # await db.drop_users()
-    await db.create_table_users()
-
-
 async def aiogram_on_startup_polling(dispatcher: Dispatcher, bot: Bot) -> None:
     from utils.set_bot_commands import set_default_commands
     from utils.notify_admins import on_startup_notify
-
-    logger.info("Database connected")
-    await database_connected()
 
     logger.info("Starting polling")
     await bot.delete_webhook(drop_pending_updates=True)
